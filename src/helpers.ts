@@ -5,10 +5,10 @@ export function callIfExists<F extends (...args: any) => any>(
   return typeof func === "function" && func(...(args as any[]));
 }
 
-export function hasOwnProp(
+export function hasOwnProp<K extends PropertyKey>(
   obj: any,
-  prop: PropertyKey
-): obj is { [prop: PropertyKey]: any } {
+  prop: K
+): obj is { [prop in K]: any } {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
