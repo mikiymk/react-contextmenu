@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import cx from "classnames";
-import assign from "object-assign";
 
-import { MenuItem } from "./MenuItem";
 import listener from "./globalEventListener";
-import AbstractMenu, { useAbstractMenu } from "./AbstractMenu";
+import { useAbstractMenu } from "./AbstractMenu";
 import { SubMenu } from "./SubMenu";
 import { hideMenu } from "./actions";
 import { cssClasses, callIfExists, store } from "./helpers";
@@ -100,8 +97,16 @@ export const ContextMenu = (props: ContextMenuProps) => {
     callIfExists(props.onShow, e);
   };
 
-  const handleHide = (e: (Event | React.UIEvent) & { detail?: { id: string } | number }) => {
-    if (isVisible && (!e.detail || !e.detail.id || e.detail.id === props.id)) {
+  const handleHide = (
+    e: (Event | React.UIEvent) & { detail?: { id: string } | number }
+  ) => {
+    if (
+      isVisible &&
+      (!e.detail ||
+        typeof e.detail !== "object" ||
+        !e.detail.id ||
+        e.detail.id === props.id)
+    ) {
       unregisterHandlers();
       setIsVisible(false);
       setSelectedItem(null);
@@ -120,7 +125,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     callIfExists(
       props.onMouseLeave,
       event,
-      assign({}, props.data, store.data),
+      Object.assign({}, props.data, store.data),
       store.target
     );
 

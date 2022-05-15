@@ -1,5 +1,4 @@
-import React, { Component, useRef, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useRef, useState } from "react";
 
 import { MenuItem } from "./MenuItem";
 import { SubMenu } from "./SubMenu";
@@ -152,14 +151,20 @@ export const useAbstractMenu = (props: UseAbstractMenuProps) => {
 
   const renderChildren = (children: React.ReactNode) =>
     React.Children.map(children, (child) => {
-      const props = {};
       if (!React.isValidElement(child)) return child;
-      if ([MenuItem, SubMenu].indexOf(child.type) < 0) {
+      if (typeof child === "string") return child;
+      if (child.type !== MenuItem && child.type !== SubMenu) {
         // Maybe the MenuItem or SubMenu is capsuled in a wrapper div or something else
-        props.children = renderChildren(child.props.children);
-        return React.cloneElement(child, props);
+        return (
+          <child.type {...child.props}>
+            {renderChildren(child.props.children)}
+          </child.type>
+        );
       }
-      props.onMouseLeave = onChildMouseLeave.bind(this);
+      const props = {
+        onMouseLeave: onChildMouseLeave,
+      };
+
       if (child.type === SubMenu) {
         // special props for SubMenu only
         props.forceOpen = forceSubMenuOpen && selectedItem === child;
@@ -172,11 +177,22 @@ export const useAbstractMenu = (props: UseAbstractMenuProps) => {
         props.ref = (ref) => {
           seletedItemRef.current = ref;
         };
+        return   <child.type
+        {...child.props}
+        {...props}
+      
+      />
         return React.cloneElement(child, props);
       }
-      // onMouseMove is only needed for non selected items
-      props.onMouseMove = () => onChildMouseMove(child);
-      return React.cloneElement(child, props);
+      return (
+        <child.type
+          {...child.props}
+          {...props}
+          // onMouseMove is only needed for non selected items
+
+          onMouseMove={() => onChildMouseMove(child)}
+        />
+      );
     });
 
   return {

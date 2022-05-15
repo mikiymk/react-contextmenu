@@ -5,7 +5,11 @@ import { hideMenu } from "./actions";
 import { callIfExists, cssClasses, store } from "./helpers";
 
 type MenuItemProps = {
-  attributes?: React.HTMLAttributes<HTMLDivElement>;
+  attributes?: React.HTMLAttributes<HTMLDivElement> & {
+    disabledClassName: string;
+    dividerClassName: string;
+    selectedClassName: string;
+  };
   className?: string;
   data?: Object;
   disabled?: boolean;

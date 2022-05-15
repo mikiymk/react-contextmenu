@@ -30,7 +30,12 @@ type SubMenuProps = {
   ) => void;
 
   children: React.ReactNode;
-  attributes?: React.HTMLAttributes<any>;
+  attributes?: React.HTMLAttributes<any> & {
+    listClassName: string[];
+    disabledClassName: string;
+    visibleClassName: string;
+    selectedClassName: string;
+  };
 
   selected: boolean;
   onMouseMove: () => void;
@@ -38,6 +43,7 @@ type SubMenuProps = {
   forceOpen: boolean;
   forceClose: () => void;
   parentKeyNavigationHandler: () => void;
+  data: any;
 };
 
 export const SubMenu = (props: SubMenuProps) => {
