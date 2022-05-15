@@ -1,44 +1,53 @@
-import { MENU_SHOW, MENU_HIDE } from './actions';
-import { uniqueId, hasOwnProp, canUseDOM } from './helpers';
+import { MENU_SHOW, MENU_HIDE } from "./actions";
+import { uniqueId, hasOwnProp, canUseDOM } from "./helpers";
 
 class GlobalEventListener {
-    constructor() {
-        this.callbacks = {};
+  private callbacks: {
+    [id: string]: {
+      show: (event: CustomEvent) => void;
+      hide: (event: CustomEvent) => void;
+    };
+  };
+  constructor() {
+    this.callbacks = {};
 
-        if (canUseDOM) {
-            window.addEventListener(MENU_SHOW, this.handleShowEvent);
-            window.addEventListener(MENU_HIDE, this.handleHideEvent);
-        }
+    if (canUseDOM) {
+      window.addEventListener(MENU_SHOW, this.handleShowEvent as any);
+      window.addEventListener(MENU_HIDE, this.handleHideEvent as any);
     }
+  }
 
-    handleShowEvent = (event) => {
-        for (const id in this.callbacks) {
-            if (hasOwnProp(this.callbacks, id)) this.callbacks[id].show(event);
-        }
+  handleShowEvent = (event: CustomEvent) => {
+    for (const id in this.callbacks) {
+      if (hasOwnProp(this.callbacks, id)) this.callbacks[id].show(event);
     }
+  };
 
-    handleHideEvent = (event) => {
-        for (const id in this.callbacks) {
-            if (hasOwnProp(this.callbacks, id)) this.callbacks[id].hide(event);
-        }
+  handleHideEvent = (event: CustomEvent) => {
+    for (const id in this.callbacks) {
+      if (hasOwnProp(this.callbacks, id)) this.callbacks[id].hide(event);
     }
+  };
 
-    register = (showCallback, hideCallback) => {
-        const id = uniqueId();
+  register = (
+    showCallback: (event: CustomEvent) => void,
+    hideCallback: (event: CustomEvent) => void
+  ) => {
+    const id = uniqueId();
 
-        this.callbacks[id] = {
-            show: showCallback,
-            hide: hideCallback
-        };
+    this.callbacks[id] = {
+      show: showCallback,
+      hide: hideCallback,
+    };
 
-        return id;
+    return id;
+  };
+
+  unregister = (id: string) => {
+    if (id && this.callbacks[id]) {
+      delete this.callbacks[id];
     }
-
-    unregister = (id) => {
-        if (id && this.callbacks[id]) {
-            delete this.callbacks[id];
-        }
-    }
+  };
 }
 
 export default new GlobalEventListener();

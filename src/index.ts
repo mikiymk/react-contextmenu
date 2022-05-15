@@ -1,6 +1,6 @@
-export { default as ContextMenu } from './ContextMenu';
-export { default as ContextMenuTrigger } from './ContextMenuTrigger';
-export { default as MenuItem } from './MenuItem';
-export { default as SubMenu } from './SubMenu';
-export { default as connectMenu } from './connectMenu';
-export { hideMenu, showMenu } from './actions';
+export { ContextMenu } from "./ContextMenu";
+export { ContextMenuTrigger } from "./ContextMenuTrigger";
+export { MenuItem } from "./MenuItem";
+export { SubMenu } from "./SubMenu";
+export { connectMenu } from "./connectMenu";
+export { hideMenu, showMenu } from "./actions";
